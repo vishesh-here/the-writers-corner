@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { Users, PenTool, BookOpen, Heart, MessageCircle, Filter, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { LikeButton } from './like-button'
+import { CommentsSection } from './comments-section'
 import Link from 'next/link'
 
 interface CommunityPost {
@@ -28,6 +30,11 @@ interface CommunityPost {
       slug: string
     }
   }
+  _count: {
+    likes: number
+    comments: number
+  }
+  isLikedByUser: boolean
 }
 
 export function CommunityOverview() {
@@ -249,14 +256,15 @@ export function CommunityOverview() {
                     
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" className="text-forest hover:text-rust">
-                          <Heart className="w-4 h-4 mr-1" />
-                          Like
-                        </Button>
-                        <Button variant="ghost" size="sm" className="text-forest hover:text-rust">
-                          <MessageCircle className="w-4 h-4 mr-1" />
-                          Comment
-                        </Button>
+                        <LikeButton
+                          postId={post.id}
+                          initialLikeCount={post._count.likes}
+                          initialIsLiked={post.isLikedByUser}
+                        />
+                        <CommentsSection
+                          postId={post.id}
+                          initialCommentCount={post._count.comments}
+                        />
                       </div>
                       
                       {post.exercise && (
