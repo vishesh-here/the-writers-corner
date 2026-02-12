@@ -1,7 +1,6 @@
 generator client {
     provider = "prisma-client-js"
     binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
-    output = "/home/ubuntu/writers_corner/app/node_modules/.prisma/client"
 }
 
 datasource db {
@@ -50,8 +49,43 @@ model User {
   submissions   ExerciseSubmission[]
   communityPosts CommunityPost[]
   progress      UserProgress[]
+  publishedWorks PublishedWork[]
+  workLikes     WorkLike[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+enum WorkType {
+  STORY_NOVEL
+  POEM
+  ARTICLE_ESSAY
+}
+
+model PublishedWork {
+  id           String    @id @default(cuid())
+  title        String
+  description  String    @db.Text
+  externalLink String
+  workType     WorkType
+  genre        String
+  likesCount   Int       @default(0)
+  viewsCount   Int       @default(0)
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes        WorkLike[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model WorkLike {
+  id        String        @id @default(cuid())
+  userId    String
+  workId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  work      PublishedWork @relation(fields: [workId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+
+  @@unique([userId, workId])
 }
 
 model VerificationToken {
