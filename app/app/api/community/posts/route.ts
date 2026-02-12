@@ -49,7 +49,7 @@ export async function GET() {
     })
 
     // Convert submissions to community post format
-    const posts = submissions.map(submission => ({
+    const posts = submissions.map((submission: typeof submissions[0]) => ({
       id: submission.id,
       title: submission.exercise.title,
       content: submission.content,
