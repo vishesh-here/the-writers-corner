@@ -2,13 +2,26 @@
 'use client'
 
 import { useSession, signOut } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { PenTool, BookOpen, Users, Map, User, LogOut } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { PenTool, BookOpen, Users, Map, User, LogOut, Search, UserPlus } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 export function Navigation() {
   const { data: session } = useSession()
+  const [pendingCount, setPendingCount] = useState(0)
+
+  useEffect(() => {
+    if (session) {
+      // Fetch pending friend requests count
+      fetch('/api/friends/pending')
+        .then(res => res.json())
+        .then(data => setPendingCount(data.totalPending || 0))
+        .catch(() => setPendingCount(0))
+    }
+  }, [session])
 
   return (
     <motion.nav 
@@ -51,9 +64,25 @@ export function Navigation() {
                     <Map className="w-4 h-4" />
                     <span>Roadmap</span>
                   </Link>
+                  <Link href="/search" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
+                    <Search className="w-4 h-4" />
+                    <span>Search</span>
+                  </Link>
+                  <Link href="/friends" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter relative">
+                    <UserPlus className="w-4 h-4" />
+                    <span>Friends</span>
+                    {pendingCount > 0 && (
+                      <Badge className="absolute -top-2 -right-4 bg-rust text-parchment text-xs px-1.5 py-0.5 min-w-[1.25rem] h-5">
+                        {pendingCount}
+                      </Badge>
+                    )}
+                  </Link>
                 </div>
 
                 <div className="flex items-center space-x-3">
+                  <Link href="/profile" className="text-ink hover:text-rust transition-colors">
+                    <User className="w-5 h-5" />
+                  </Link>
                   <span className="text-ink font-typewriter hidden sm:block">
                     Welcome, {(session.user as any)?.firstName || session.user?.name?.split(' ')[0] || 'Writer'}!
                   </span>
