@@ -137,3 +137,21 @@ model UserProgress {
 
   @@unique([userId, milestoneId])
 }
+
+model WritingResource {
+  id             String   @id @default(cuid())
+  title          String
+  description    String   @db.Text
+  url            String
+  platform       String   // YouTube, Reddit, Web, etc.
+  category       String   // Getting Started, Character Development, etc.
+  difficultyLevel String  // Beginner, Intermediate, Advanced
+  resourceType   String   // Video, Article, Thread, Course, Tool
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([category])
+  @@index([platform])
+  @@index([difficultyLevel])
+  @@index([resourceType])
+}
