@@ -288,6 +288,18 @@ async function main() {
   }
   console.log(`✅ Created ${milestonesData.length} milestones for 3-month roadmap`)
 
+  // Create writing resources
+  const resourcesData = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), 'data/resources.json'), 'utf-8')
+  )
+  
+  for (const resourceData of resourcesData) {
+    await prisma.writingResource.create({
+      data: resourceData
+    })
+  }
+  console.log(`✅ Created ${resourcesData.length} writing resources`)
+
   console.log('🎉 Database seeding completed successfully!')
 }
 
