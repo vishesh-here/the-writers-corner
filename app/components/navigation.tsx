@@ -4,7 +4,7 @@
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { PenTool, BookOpen, Users, Map, User, LogOut } from 'lucide-react'
+import { PenTool, BookOpen, Users, Map, User, LogOut, Sparkles } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 export function Navigation() {
@@ -50,6 +50,10 @@ export function Navigation() {
                   <Link href="/roadmap" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
                     <Map className="w-4 h-4" />
                     <span>Roadmap</span>
+                  </Link>
+                  <Link href="/ai-review" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
+                    <Sparkles className="w-4 h-4" />
+                    <span>AI Review</span>
                   </Link>
                 </div>
 
