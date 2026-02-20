@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Users, PenTool, BookOpen, Heart, MessageCircle, Filter, Search } from 'lucide-react'
+import { DownloadPostButton } from '@/components/community/download-post-button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Link from 'next/link'
@@ -257,6 +258,7 @@ export function CommunityOverview() {
                           <MessageCircle className="w-4 h-4 mr-1" />
                           Comment
                         </Button>
+                        <DownloadPostButton post={post} />
                       </div>
                       
                       {post.exercise && (
