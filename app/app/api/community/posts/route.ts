@@ -18,7 +18,7 @@ export async function GET() {
       )
     }
 
-    // Fetch public exercise submissions
+    // Fetch public exercise submissions with saved status
     const submissions = await prisma.exerciseSubmission.findMany({
       where: {
         isPublic: true
@@ -40,6 +40,14 @@ export async function GET() {
               }
             }
           }
+        },
+        savedBy: {
+          where: {
+            userId: session.user.id
+          },
+          select: {
+            id: true
+          }
         }
       },
       orderBy: {
@@ -55,7 +63,9 @@ export async function GET() {
       content: submission.content,
       createdAt: submission.createdAt.toISOString(),
       user: submission.user,
-      exercise: submission.exercise
+      exercise: submission.exercise,
+      isSaved: submission.savedBy.length > 0,
+      savedPostId: submission.savedBy[0]?.id || null
     }))
 
     return NextResponse.json({ posts })

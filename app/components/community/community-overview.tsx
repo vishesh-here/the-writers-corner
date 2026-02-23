@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Users, PenTool, BookOpen, Heart, MessageCircle, Filter, Search } from 'lucide-react'
+import { Users, PenTool, BookOpen, Heart, MessageCircle, Filter, Search, Bookmark, BookmarkCheck } from 'lucide-react'
 import { DownloadPostButton } from '@/components/community/download-post-button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -29,6 +29,8 @@ interface CommunityPost {
       slug: string
     }
   }
+  isSaved?: boolean
+  savedPostId?: string | null
 }
 
 export function CommunityOverview() {
@@ -36,6 +38,7 @@ export function CommunityOverview() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [topicFilter, setTopicFilter] = useState('all')
+  const [savingPostId, setSavingPostId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchCommunityPosts()
@@ -52,6 +55,51 @@ export function CommunityOverview() {
       console.error('Error fetching community posts:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const toggleSavePost = async (post: CommunityPost) => {
+    if (savingPostId) return // Prevent multiple simultaneous saves
+    
+    setSavingPostId(post.id)
+    
+    try {
+      if (post.isSaved && post.savedPostId) {
+        // Unsave the post
+        const response = await fetch(`/api/saved-posts/${post.savedPostId}`, {
+          method: 'DELETE'
+        })
+        
+        if (response.ok) {
+          setPosts(prev => prev.map(p => 
+            p.id === post.id 
+              ? { ...p, isSaved: false, savedPostId: null }
+              : p
+          ))
+        }
+      } else {
+        // Save the post
+        const response = await fetch('/api/saved-posts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ submissionId: post.id })
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          setPosts(prev => prev.map(p => 
+            p.id === post.id 
+              ? { ...p, isSaved: true, savedPostId: data.savedPost.id }
+              : p
+          ))
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling save:', error)
+    } finally {
+      setSavingPostId(null)
     }
   }
 
@@ -257,6 +305,25 @@ export function CommunityOverview() {
                         <Button variant="ghost" size="sm" className="text-forest hover:text-rust">
                           <MessageCircle className="w-4 h-4 mr-1" />
                           Comment
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className={`${post.isSaved ? 'text-rust' : 'text-forest'} hover:text-rust`}
+                          onClick={() => toggleSavePost(post)}
+                          disabled={savingPostId === post.id}
+                        >
+                          {post.isSaved ? (
+                            <>
+                              <BookmarkCheck className="w-4 h-4 mr-1 fill-current" />
+                              Saved
+                            </>
+                          ) : (
+                            <>
+                              <Bookmark className="w-4 h-4 mr-1" />
+                              Save
+                            </>
+                          )}
                         </Button>
                         <DownloadPostButton post={post} />
                       </div>
