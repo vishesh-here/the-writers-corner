@@ -4,7 +4,7 @@
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { PenTool, BookOpen, Users, Map, User, LogOut, Sparkles } from 'lucide-react'
+import { PenTool, BookOpen, Users, Map, User, LogOut, Sparkles, Bookmark } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 export function Navigation() {
@@ -54,6 +54,10 @@ export function Navigation() {
                   <Link href="/ai-review" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
                     <Sparkles className="w-4 h-4" />
                     <span>AI Review</span>
+                  </Link>
+                  <Link href="/saved-posts" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
+                    <Bookmark className="w-4 h-4" />
+                    <span>Saved</span>
                   </Link>
                 </div>
 
