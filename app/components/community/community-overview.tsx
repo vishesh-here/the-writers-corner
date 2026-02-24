@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Users, PenTool, BookOpen, Heart, MessageCircle, Filter, Search, Bookmark, BookmarkCheck } from 'lucide-react'
 import { DownloadPostButton } from '@/components/community/download-post-button'
+import { GenerateVideoButton } from '@/components/community/generate-video-button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Link from 'next/link'
@@ -326,6 +327,10 @@ export function CommunityOverview() {
                           )}
                         </Button>
                         <DownloadPostButton post={post} />
+                        <GenerateVideoButton 
+                          postId={post.id} 
+                          postTitle={post.title || 'Exercise Response'} 
+                        />
                       </div>
                       
                       {post.exercise && (
