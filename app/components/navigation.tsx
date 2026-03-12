@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { PenTool, BookOpen, Users, Map, User, LogOut, Sparkles, Bookmark, Search, UserPlus } from 'lucide-react'
+import { PenTool, BookOpen, Users, Map, User, LogOut, Sparkles, Bookmark, Search, UserPlus, Star, FileText } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 export function Navigation() {
@@ -55,6 +55,14 @@ export function Navigation() {
                   <Link href="/topics" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
                     <BookOpen className="w-4 h-4" />
                     <span>Topics</span>
+                  </Link>
+                  <Link href="/featured-works" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
+                    <Star className="w-4 h-4" />
+                    <span>Featured Works</span>
+                  </Link>
+                  <Link href="/my-works" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
+                    <FileText className="w-4 h-4" />
+                    <span>My Works</span>
                   </Link>
                   <Link href="/community" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
                     <Users className="w-4 h-4" />
