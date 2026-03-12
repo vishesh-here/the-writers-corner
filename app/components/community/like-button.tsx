@@ -4,14 +4,16 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Heart } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 
 interface LikeButtonProps {
   submissionId: string
   initialLiked: boolean
   initialCount: number
+  className?: string
 }
 
-export function LikeButton({ submissionId, initialLiked, initialCount }: LikeButtonProps) {
+export function LikeButton({ submissionId, initialLiked, initialCount, className }: LikeButtonProps) {
   const [liked, setLiked] = useState(initialLiked)
   const [count, setCount] = useState(initialCount)
   const [loading, setLoading] = useState(false)
@@ -19,6 +21,12 @@ export function LikeButton({ submissionId, initialLiked, initialCount }: LikeBut
 
   const handleLike = async () => {
     if (loading) return
+
+    // Optimistic update
+    const newLiked = !liked
+    const newCount = newLiked ? count + 1 : count - 1
+    setLiked(newLiked)
+    setCount(newCount)
 
     setLoading(true)
     try {
@@ -32,9 +40,13 @@ export function LikeButton({ submissionId, initialLiked, initialCount }: LikeBut
 
       if (response.ok) {
         const data = await response.json()
+        // Sync with server response
         setLiked(data.liked)
-        setCount(prev => data.liked ? prev + 1 : prev - 1)
+        setCount(data.liked ? count + 1 : count - 1)
       } else {
+        // Revert optimistic update
+        setLiked(!newLiked)
+        setCount(count)
         const error = await response.json()
         toast({
           title: 'Error',
@@ -43,6 +55,9 @@ export function LikeButton({ submissionId, initialLiked, initialCount }: LikeBut
         })
       }
     } catch (error) {
+      // Revert optimistic update
+      setLiked(!newLiked)
+      setCount(count)
       console.error('Error toggling like:', error)
       toast({
         title: 'Error',
@@ -55,15 +70,24 @@ export function LikeButton({ submissionId, initialLiked, initialCount }: LikeBut
   }
 
   return (
-    <Button 
-      variant="ghost" 
-      size="sm" 
-      className={`text-forest hover:text-rust transition-colors ${liked ? 'text-rust' : ''}`}
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={handleLike}
       disabled={loading}
+      className={cn(
+        "transition-all duration-200 font-typewriter",
+        liked
+          ? "text-rust hover:text-rust/80"
+          : "text-forest hover:text-rust",
+        className
+      )}
     >
-      <Heart 
-        className={`w-4 h-4 mr-1 transition-all ${liked ? 'fill-current' : ''}`} 
+      <Heart
+        className={cn(
+          "w-4 h-4 mr-1 transition-all duration-200",
+          liked ? "fill-current" : ""
+        )}
       />
       {count > 0 ? count : 'Like'}
     </Button>

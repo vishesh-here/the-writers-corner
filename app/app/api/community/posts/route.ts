@@ -66,6 +66,47 @@ export async function GET() {
       take: 50
     })
 
+    // Get like and comment counts for each submission
+    const submissionIds = submissions.map(s => s.id)
+    
+    const likeCounts = await prisma.postLike.groupBy({
+      by: ['postId'],
+      where: {
+        postId: { in: submissionIds },
+        postType: 'EXERCISE_SUBMISSION'
+      },
+      _count: {
+        id: true
+      }
+    })
+
+    const commentCounts = await prisma.postComment.groupBy({
+      by: ['postId'],
+      where: {
+        postId: { in: submissionIds },
+        postType: 'EXERCISE_SUBMISSION'
+      },
+      _count: {
+        id: true
+      }
+    })
+
+    // Get user's likes for these posts
+    const userLikes = await prisma.postLike.findMany({
+      where: {
+        userId: session.user.id,
+        postId: { in: submissionIds },
+        postType: 'EXERCISE_SUBMISSION'
+      },
+      select: {
+        postId: true
+      }
+    })
+
+    const userLikedPosts = new Set(userLikes.map(like => like.postId))
+    const likeCountMap = new Map(likeCounts.map(lc => [lc.postId, lc._count.id]))
+    const commentCountMap = new Map(commentCounts.map(cc => [cc.postId, cc._count.id]))
+
     // Convert submissions to community post format
     const posts = submissions.map(submission => ({
       id: submission.id,
