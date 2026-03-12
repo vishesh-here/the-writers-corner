@@ -108,7 +108,7 @@ export async function GET() {
     const commentCountMap = new Map(commentCounts.map(cc => [cc.postId, cc._count.id]))
 
     // Convert submissions to community post format
-    const posts = submissions.map(submission => ({
+    const posts = submissions.map((submission: typeof submissions[0]) => ({
       id: submission.id,
       title: submission.exercise.title,
       content: submission.content,
