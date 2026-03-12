@@ -1,598 +1,197 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js" alt="Next.js 14" />
-  <img src="https://img.shields.io/badge/TypeScript-5.2-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-3.3-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/Prisma-6.7-2D3748?style=for-the-badge&logo=prisma" alt="Prisma" />
-  <img src="https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
-</p>
-
 # ✍️ The Writer's Corner
 
-> *A vintage-themed learning platform for aspiring novel writers, featuring interactive exercises, educational content, and a supportive community.*
+A full-stack web application for aspiring novelists to learn, practice, and grow — with a community of fellow writers.
 
-The Writer's Corner is a comprehensive Next.js 14 application designed to help aspiring writers master the craft of novel writing. With its distinctive typewriter aesthetic and structured curriculum, it provides an immersive learning experience covering character development, plot structure, world-building, and more.
-
----
-
-## 📖 Table of Contents
-
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
-- [Project Structure](#-project-structure)
-- [Design Patterns & Architecture](#-design-patterns--architecture)
-- [Code Rules & Conventions](#-code-rules--conventions)
-- [Feature Documentation](#-feature-documentation)
-- [Contributing](#-contributing)
-- [License](#-license)
+Built with **Next.js 14**, **Prisma**, **PostgreSQL**, and **NextAuth**.
 
 ---
 
-## ✨ Features
+## 🚀 Features
 
-### 📚 Writing Topics
-Comprehensive educational content covering essential novel writing techniques:
-- **Character Development** - Create memorable, multi-dimensional characters
-- **Plot Structure** - Master story architecture and pacing
-- **World-Building** - Craft immersive fictional universes
-- **Writing Tension** - Build suspense and keep readers engaged
+### 📚 Writing Topics & Exercises
+- Structured writing curriculum across 4 core topics: Character Development, Plot Structure, World-Building, and Writing Tension
+- Each topic contains guided exercises with prompts and instructions
+- Submit responses and optionally share them with the community
+- Track your progress through a 12-week milestone roadmap
 
-### 📝 Interactive Exercises
-Hands-on writing prompts with real-time feedback:
-- Save drafts and track progress
-- Submit completed exercises
-- Share work with the community
+### 👥 Community
+- Browse public exercise submissions from all writers
+- **Like posts** with real-time optimistic updates
+- **Comment on posts** — works across both community posts and exercise submissions
+- **Save posts** to your personal reading list
+- Download posts or generate video summaries
 
-### 👥 Community Hub
-Connect with fellow writers:
-- Share your exercises publicly
-- Read and learn from others' submissions
-- Build a supportive writing network
+### 🤝 Friends & Social
+- Send and receive friend requests
+- View pending requests with a live badge counter in the navigation
+- Accept, reject, or unfriend connections
+- Search for other writers by name
 
-### 🗺️ Learning Roadmap
-12-week structured curriculum:
-- Track your progress through milestones
-- Set and achieve writing goals
-- Visualize your learning journey
+### 📖 Published Works
+- Share your external published works (stories, novels, poems, articles, essays)
+- Browse featured works from the community
+- Like and view-count tracking on published works
+- Supports Story/Novel, Poem, and Article/Essay types
 
-### 🔐 Secure Authentication
-Complete user management:
-- Email/password registration
-- Secure session handling
-- Protected routes and API endpoints
+### 📚 Writing Resources Library
+- Curated library of writing resources (videos, articles, threads, courses, tools)
+- Filter by category, difficulty level, platform, and resource type
+- Covers beginner through advanced levels
+
+### 🤖 AI Writing Review
+- Submit your writing for AI-powered feedback
+- Get structured critique on style, structure, and technique
+
+### 🗺️ Roadmap
+- 12-week structured learning path broken into weekly milestones
+- Toggle milestones as complete to track your journey
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category | Technology | Version |
-|----------|------------|---------|
-| **Framework** | Next.js (App Router) | 14.2.28 |
-| **Language** | TypeScript | 5.2.2 |
-| **Database** | PostgreSQL + Prisma ORM | 6.7.0 |
-| **Styling** | Tailwind CSS | 3.3.3 |
-| **UI Components** | shadcn/ui (Radix primitives) | Latest |
-| **Authentication** | NextAuth.js | 4.24.11 |
-| **Animations** | Framer Motion | 10.18.0 |
-| **State Management** | Jotai, React Query | 2.6.0, 5.0.0 |
-| **Form Handling** | React Hook Form + Zod | 7.53.0, 3.23.8 |
-| **Date Handling** | date-fns | 3.6.0 |
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Database | PostgreSQL (via Prisma ORM) |
+| Auth | NextAuth.js v4 (Credentials + Google + GitHub) |
+| Styling | Tailwind CSS + custom vintage/typewriter theme |
+| Animations | Framer Motion |
+| UI Components | shadcn/ui |
+| Package Manager | npm |
 
 ---
 
-## 🚀 Getting Started
+## 📦 Database Schema
+
+Key models:
+
+- **User** — auth, profile, relations to all content
+- **WritingTopic / Exercise / ExerciseSubmission** — core curriculum
+- **CommunityPost** — standalone community posts
+- **Like / Comment** — reactions on exercise submissions
+- **PostLike / PostComment** — unified reactions across both post types
+- **SavedPost** — bookmarked submissions
+- **FriendRequest / Friendship** — social graph
+- **PublishedWork / WorkLike** — external published works
+- **WritingResource** — curated resource library
+- **Milestone / UserProgress** — roadmap tracking
+
+---
+
+## ⚙️ Getting Started
 
 ### Prerequisites
-
-- **Node.js** >= 18.x
-- **npm** or **yarn** or **pnpm**
-- **PostgreSQL** >= 14
+- Node.js 18+
+- PostgreSQL database
+- npm
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/vishesh-here/the-writers-corner.git
-   cd the-writers-corner
-   ```
+```bash
+# Clone the repo
+git clone https://github.com/vishesh-here/the-writers-corner.git
+cd the-writers-corner/app
 
-2. **Install dependencies**
-   ```bash
-   cd app
-   npm install
-   ```
+# Install dependencies
+npm install --legacy-peer-deps
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Configure your `.env.local`:
-   ```env
-   # Database
-   DATABASE_URL="postgresql://user:password@localhost:5432/writers_corner"
-   
-   # NextAuth
-   NEXTAUTH_SECRET="your-secret-key-here"
-   NEXTAUTH_URL="http://localhost:3000"
-   ```
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your DATABASE_URL, NEXTAUTH_SECRET, and OAuth credentials
 
-4. **Initialize the database**
-   ```bash
-   npx prisma generate
-   npx prisma db push
-   npx prisma db seed
-   ```
+# Generate Prisma client
+npx prisma generate
 
-5. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+# Run database migrations
+npx prisma migrate dev
 
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
----
-
-## 📁 Project Structure
-
+# Start development server
+npm run dev
 ```
-the-writers-corner/
-└── app/                          # Main application directory
-    ├── app/                      # Next.js App Router
-    │   ├── api/                  # API routes
-    │   │   ├── auth/             # NextAuth endpoints
-    │   │   ├── community/        # Community posts API
-    │   │   ├── exercises/        # Exercise submission API
-    │   │   ├── roadmap/          # Milestone tracking API
-    │   │   └── signup/           # User registration
-    │   ├── auth/                 # Auth pages (signin/signup)
-    │   ├── community/            # Community page
-    │   ├── roadmap/              # User roadmap page
-    │   ├── topics/               # Writing topics pages
-    │   │   └── [slug]/           # Dynamic topic routes
-    │   ├── layout.tsx            # Root layout
-    │   ├── page.tsx              # Homepage
-    │   └── globals.css           # Global styles
-    │
-    ├── components/               # React components
-    │   ├── ui/                   # shadcn/ui base components
-    │   ├── sections/             # Homepage sections
-    │   ├── topics/               # Topic-related components
-    │   ├── community/            # Community components
-    │   ├── roadmap/              # Roadmap components
-    │   ├── navigation.tsx        # Main navigation
-    │   ├── providers.tsx         # Context providers
-    │   └── theme-provider.tsx    # Theme context
-    │
-    ├── lib/                      # Utilities & configuration
-    │   ├── auth.ts               # NextAuth configuration
-    │   ├── db.ts                 # Prisma client singleton
-    │   ├── types.ts              # TypeScript extensions
-    │   └── utils.ts              # Utility functions
-    │
-    ├── prisma/                   # Database
-    │   └── schema.prisma         # Prisma schema
-    │
-    ├── data/                     # Static content
-    │   └── novel_writing_guide.md
-    │
-    ├── hooks/                    # Custom React hooks
-    │   └── use-toast.ts
-    │
-    └── scripts/                  # Utility scripts
-        └── seed.ts               # Database seeding
+
+Open [http://localhost:3000](http://localhost:3000).
+
+### Environment Variables
+
+```env
+DATABASE_URL="postgresql://user:password@host:5432/dbname"
+NEXTAUTH_SECRET="your-secret-here"
+NEXTAUTH_URL="http://localhost:3000"
+
+# Optional OAuth providers
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+GITHUB_ID=""
+GITHUB_SECRET=""
+```
+
+### Build for Production
+
+```bash
+npm run build
+npm start
 ```
 
 ---
 
-## 🏗️ Design Patterns & Architecture
-
-### 1. Component Architecture
-
-#### Atomic Design Pattern
-Components are organized following atomic design principles:
+## 🗂️ Project Structure
 
 ```
-components/
-├── ui/           # Atoms: buttons, inputs, cards (shadcn/ui)
-├── sections/     # Molecules/Organisms: composed features
-├── topics/       # Feature modules: domain-specific
-└── community/    # Feature modules: domain-specific
-```
-
-#### Server vs Client Components
-
-**Decision Tree:**
-```
-Is the component...
-├── Fetching data? → Server Component
-├── Using hooks (useState, useEffect)? → Client Component
-├── Using browser APIs? → Client Component
-├── Rendering static content? → Server Component
-└── Handling user interactions? → Client Component
-```
-
-**Example - Server Component:**
-```tsx
-// app/topics/page.tsx
-export default async function TopicsPage() {
-  const topics = await prisma.writingTopic.findMany()
-  return <TopicList topics={topics} />
-}
-```
-
-**Example - Client Component:**
-```tsx
-// components/navigation.tsx
-'use client'
-
-import { useSession } from 'next-auth/react'
-
-export function Navigation() {
-  const { data: session } = useSession()
-  // Interactive UI logic...
-}
-```
-
-### 2. Database Access Pattern (Singleton)
-
-Prevents connection exhaustion during development hot-reloading:
-
-```typescript
-// lib/db.ts
-import { PrismaClient } from '@prisma/client'
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
-}
-
-export const prisma = globalForPrisma.prisma ?? new PrismaClient()
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
-```
-
-### 3. Authentication Pattern
-
-NextAuth.js with JWT strategy and protected routes:
-
-```typescript
-// lib/auth.ts
-export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    CredentialsProvider({
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
-      },
-      async authorize(credentials) {
-        // Validation logic...
-        const isValid = await bcrypt.compare(password, user.password)
-        return isValid ? user : null
-      }
-    })
-  ],
-  session: { strategy: 'jwt' },
-  callbacks: {
-    async jwt({ token, user }) { /* ... */ },
-    async session({ session, token }) { /* ... */ }
-  }
-}
-```
-
-**Protected API Route Pattern:**
-```typescript
-// app/api/exercises/[id]/submit/route.ts
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-
-export async function POST(request: Request) {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-  
-  // Protected logic...
-}
-```
-
-### 4. Styling Architecture
-
-**Layered Approach:**
-```
-1. Base Layer: Tailwind CSS utilities
-2. Component Layer: shadcn/ui components
-3. Theme Layer: Custom vintage CSS variables
-4. Utility Layer: Custom utility classes (.btn-vintage, .card-vintage)
-```
-
-**Custom Color System:**
-```css
-/* globals.css */
-:root {
-  --parchment: 43 74% 94%;   /* Background */
-  --ink: 25 25% 15%;          /* Primary text */
-  --sepia: 37 45% 85%;        /* Secondary bg */
-  --rust: 16 85% 55%;         /* Accent */
-  --forest: 145 25% 35%;      /* Success */
-  --gold: 45 85% 65%;         /* Highlight */
-}
-```
-
-### 5. State Management Strategy
-
-| Use Case | Solution |
-|----------|----------|
-| Server state | React Query / SWR |
-| Global UI state | Jotai atoms |
-| Form state | React Hook Form |
-| Auth state | NextAuth useSession |
-| Local component state | useState |
-
----
-
-## 📏 Code Rules & Conventions
-
-### File Naming
-
-| Type | Convention | Example |
-|------|------------|---------|
-| Components | kebab-case | `topic-detail.tsx` |
-| Pages | page.tsx in folders | `app/topics/page.tsx` |
-| Utilities | kebab-case | `use-toast.ts` |
-| Types | camelCase | `types.ts` |
-
-### Component Structure
-
-```tsx
-// 1. Imports (grouped by type)
-'use client' // if needed
-
-import { useState } from 'react'           // React
-import { motion } from 'framer-motion'     // External libs
-import { Button } from '@/components/ui/button' // Internal
-import { cn } from '@/lib/utils'           // Utilities
-
-// 2. Types
-interface ComponentProps {
-  title: string
-  isActive?: boolean
-}
-
-// 3. Component
-export function ComponentName({ title, isActive = false }: ComponentProps) {
-  // Hooks
-  const [state, setState] = useState(false)
-  
-  // Handlers
-  const handleClick = () => { /* ... */ }
-  
-  // Render
-  return (
-    <div className={cn('base-classes', isActive && 'active-classes')}>
-      {title}
-    </div>
-  )
-}
-```
-
-### Import Order
-
-```tsx
-// 1. React imports
-import { useState, useEffect } from 'react'
-
-// 2. External libraries
-import { motion } from 'framer-motion'
-import { z } from 'zod'
-
-// 3. Internal absolute imports (@/)
-import { Button } from '@/components/ui/button'
-import { prisma } from '@/lib/db'
-
-// 4. Relative imports
-import { TopicCard } from './topic-card'
-
-// 5. Types (if separate)
-import type { WritingTopic } from '@prisma/client'
-
-// 6. Styles (if any)
-import './styles.css'
-```
-
-### TypeScript Guidelines
-
-```typescript
-// ✅ Use interfaces for objects
-interface User {
-  id: string
-  name: string
-}
-
-// ✅ Use type for unions/intersections
-type Status = 'pending' | 'completed' | 'failed'
-
-// ✅ Extend NextAuth types properly
-declare module 'next-auth' {
-  interface Session {
-    user: User & { id: string }
-  }
-}
-
-// ✅ Use Zod for runtime validation
-const schema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8)
-})
-```
-
-### Tailwind CSS Guidelines
-
-**Class Order (recommended):**
-```tsx
-<div className={cn(
-  // 1. Layout (display, position)
-  'flex flex-col relative',
-  // 2. Sizing
-  'w-full max-w-md h-auto',
-  // 3. Spacing
-  'p-4 m-2 gap-4',
-  // 4. Typography
-  'font-typewriter text-ink text-lg',
-  // 5. Visual (bg, border, shadow)
-  'bg-parchment border-2 border-ink rounded-lg shadow-lg',
-  // 6. States & animations
-  'hover:bg-sepia transition-colors',
-  // 7. Responsive
-  'md:flex-row lg:max-w-lg'
-)}>
-```
-
-### API Route Guidelines
-
-```typescript
-// app/api/resource/route.ts
-
-// ✅ Use proper HTTP methods
-export async function GET(request: Request) { }
-export async function POST(request: Request) { }
-export async function PUT(request: Request) { }
-export async function DELETE(request: Request) { }
-
-// ✅ Validate input with Zod
-const bodySchema = z.object({
-  content: z.string().min(1).max(10000)
-})
-
-// ✅ Return proper status codes
-return NextResponse.json({ data }, { status: 200 })
-return NextResponse.json({ error: 'Not found' }, { status: 404 })
-return NextResponse.json({ error: 'Server error' }, { status: 500 })
-
-// ✅ Always wrap in try-catch
-export async function POST(request: Request) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    
-    const body = await request.json()
-    const validated = bodySchema.parse(body)
-    
-    // Business logic...
-    
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json({ error: 'Internal error' }, { status: 500 })
-  }
-}
+app/
+├── app/                    # Next.js App Router pages & API routes
+│   ├── api/                # API endpoints
+│   │   ├── auth/           # NextAuth handler
+│   │   ├── community/      # Community posts, likes, comments
+│   │   ├── friends/        # Friend requests & management
+│   │   ├── likes/          # Exercise submission likes
+│   │   ├── resources/      # Writing resources CRUD
+│   │   ├── saved-posts/    # Bookmarks
+│   │   ├── works/          # Published works
+│   │   └── ...
+│   ├── community/          # Community page
+│   ├── friends/            # Friends page
+│   ├── my-works/           # Published works management
+│   ├── resources/          # Writing resources library
+│   ├── roadmap/            # Learning roadmap
+│   ├── topics/             # Writing topics & exercises
+│   └── ...
+├── components/             # Shared React components
+│   ├── community/          # Community-specific components
+│   │   ├── like-button.tsx
+│   │   ├── comment-button.tsx
+│   │   └── community-overview.tsx
+│   ├── navigation.tsx      # Main nav with friend badge
+│   └── ui/                 # shadcn/ui primitives
+├── lib/
+│   ├── auth.ts             # NextAuth config + session helpers
+│   └── db.ts               # Prisma client + connect/disconnect helpers
+├── prisma/
+│   └── schema.prisma       # Full database schema
+└── ...
 ```
 
 ---
 
-## 📖 Feature Documentation
+## 🔀 Merged Features (March 2026)
 
-### Writing Topics System
+The following feature branches were merged into `main`:
 
-Topics are stored in the database with full CRUD support:
+| Branch | Feature |
+|---|---|
+| `feature/unknown-20260212153345` | Base auth & DB setup |
+| `feature/unknown-20260212153400` | Session helpers (`getCurrentUser`, `requireAuth`) |
+| `feat/likes-comments` | Like/comment system on exercise submissions |
+| `feature/likes-comments` | Enhanced LikeButton with optimistic updates |
+| `feature/friend-requests` | Friend request & friendship system |
+| `feature/published-works` | Published works showcase |
+| `feat/writing-resources-library` | Curated writing resources library |
 
-```typescript
-// Schema
-model WritingTopic {
-  id          String     @id @default(cuid())
-  title       String
-  slug        String     @unique
-  description String     @db.Text
-  content     String     @db.Text
-  exercises   Exercise[]
-  order       Int        @default(0)
-}
-```
-
-**Available Topics:**
-1. Character Development
-2. Plot Structure  
-3. World-Building
-4. Writing Tension
-
-### Exercise Submission Flow
-
-```
-1. User selects a topic
-2. Views exercises for that topic
-3. Writes response in textarea
-4. Saves draft (autosave) OR submits
-5. Optionally shares to community
-```
-
-### Roadmap & Milestones
-
-12-week curriculum with progress tracking:
-
-| Week | Focus Area |
-|------|------------|
-| 1-3 | Character Development |
-| 4-6 | Plot Structure |
-| 7-9 | World-Building |
-| 10-12 | Writing Tension & Refinement |
+All merge conflicts were resolved preserving all features. Build verified clean (`npm run build` passes with 0 errors).
 
 ---
 
-## 🤝 Contributing
+## 📝 License
 
-We welcome contributions! Please follow these steps:
-
-### Getting Started
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make your changes
-4. Run linting: `npm run lint`
-5. Commit with conventional commits: `git commit -m 'feat: add new feature'`
-6. Push to your fork: `git push origin feature/your-feature`
-7. Open a Pull Request
-
-### Commit Convention
-
-```
-feat: Add new feature
-fix: Bug fix
-docs: Documentation changes
-style: Formatting, missing semicolons
-refactor: Code refactoring
-test: Adding tests
-chore: Maintenance tasks
-```
-
-### Pull Request Guidelines
-
-- Keep PRs focused and small
-- Update documentation if needed
-- Add tests for new features
-- Ensure all tests pass
-- Request review from maintainers
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- [shadcn/ui](https://ui.shadcn.com/) - Beautiful UI components
-- [Next.js](https://nextjs.org/) - The React Framework
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
-- [Prisma](https://www.prisma.io/) - Next-generation ORM
-- [Framer Motion](https://www.framer.com/motion/) - Animation library
-
----
-
-<p align="center">
-  <strong>Happy Writing! ✍️📚</strong>
-</p>
+MIT
