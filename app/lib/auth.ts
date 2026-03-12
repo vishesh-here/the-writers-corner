@@ -5,6 +5,8 @@ import GitHubProvider from 'next-auth/providers/github'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import prisma from './db'
 import bcrypt from 'bcryptjs'
+import { getServerSession } from 'next-auth/next'
+import { redirect } from 'next/navigation'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -96,4 +98,23 @@ export async function verifyPassword(
   hashedPassword: string
 ): Promise<boolean> {
   return bcrypt.compare(password, hashedPassword)
+}
+
+export async function getCurrentUser() {
+  const session = await getServerSession(authOptions)
+  return session?.user
+}
+
+export async function requireAuth() {
+  const session = await getServerSession(authOptions)
+
+  if (!session?.user) {
+    redirect('/auth/signin')
+  }
+
+  return session.user
+}
+
+export async function getSession() {
+  return await getServerSession(authOptions)
 }
