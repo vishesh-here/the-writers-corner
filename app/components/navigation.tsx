@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useSession, signOut } from 'next-auth/react'
@@ -63,7 +62,7 @@ export function Navigation() {
                   <Link href="/my-works" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
                     <FileText className="w-4 h-4" />
                     <span>My Works</span>
-
+                  </Link>
                   <Link href="/resources" className="flex items-center space-x-2 text-ink hover:text-rust transition-colors font-typewriter">
                     <Library className="w-4 h-4" />
                     <span>Resources</span>

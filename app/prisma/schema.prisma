@@ -55,13 +55,15 @@ model User {
   savedPosts    SavedPost[]
   likes         Like[]
   comments      Comment[]
-  
+  postLikes     PostLike[]
+  postComments  PostComment[]
+
   // Friend relationships
   sentFriendRequests     FriendRequest[] @relation("SentRequests")
   receivedFriendRequests FriendRequest[] @relation("ReceivedRequests")
   friendshipsInitiated   Friendship[]    @relation("FriendshipUser1")
   friendshipsReceived    Friendship[]    @relation("FriendshipUser2")
-  
+
   publishedWorks PublishedWork[]
   workLikes     WorkLike[]
   createdAt     DateTime  @default(now())
@@ -94,6 +96,8 @@ model Friendship {
   @@unique([user1Id, user2Id])
   @@index([user1Id])
   @@index([user2Id])
+}
+
 enum WorkType {
   STORY_NOVEL
   POEM
@@ -245,6 +249,8 @@ model Comment {
   submission   ExerciseSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
+}
+
 model WritingResource {
   id             String   @id @default(cuid())
   title          String
@@ -261,4 +267,31 @@ model WritingResource {
   @@index([platform])
   @@index([difficultyLevel])
   @@index([resourceType])
+}
+
+// Unified like model supporting both CommunityPost and ExerciseSubmission
+model PostLike {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  postType  String   // COMMUNITY_POST | EXERCISE_SUBMISSION
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId, postType])
+  @@index([postId, postType])
+}
+
+// Unified comment model supporting both CommunityPost and ExerciseSubmission
+model PostComment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  userId    String
+  postId    String
+  postType  String   // COMMUNITY_POST | EXERCISE_SUBMISSION
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId, postType])
 }

@@ -42,10 +42,10 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id,
           email: user.email,
-          name: `${user.firstName} ${user.lastName}`,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          role: user.role
+          name: `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
+          firstName: user.firstName ?? undefined,
+          lastName: user.lastName ?? undefined,
+          role: (user as any).role ?? undefined
         }
       }
     }),
@@ -69,19 +69,19 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id
-        token.role = (user as any).role
-        token.firstName = (user as any).firstName
-        token.lastName = (user as any).lastName
+        token.sub = user.id
+        ;(token as any).role = (user as any).role
+        ;(token as any).firstName = (user as any).firstName
+        ;(token as any).lastName = (user as any).lastName
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id
-        (session.user as any).role = token.role
-        (session.user as any).firstName = token.firstName
-        (session.user as any).lastName = token.lastName
+        (session.user as any).id = token.sub
+        ;(session.user as any).role = (token as any).role
+        ;(session.user as any).firstName = (token as any).firstName
+        ;(session.user as any).lastName = (token as any).lastName
       }
       return session
     }
