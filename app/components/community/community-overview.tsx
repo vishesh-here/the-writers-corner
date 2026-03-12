@@ -11,6 +11,8 @@ import { DownloadPostButton } from '@/components/community/download-post-button'
 import { GenerateVideoButton } from '@/components/community/generate-video-button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { LikeButton } from './like-button'
+import { CommentButton } from './comment-button'
 import Link from 'next/link'
 
 interface CommunityPost {
@@ -32,6 +34,9 @@ interface CommunityPost {
   }
   isSaved?: boolean
   savedPostId?: string | null
+  likesCount?: number
+  commentsCount?: number
+  isLikedByUser?: boolean
 }
 
 export function CommunityOverview() {
@@ -299,14 +304,15 @@ export function CommunityOverview() {
                     
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" className="text-forest hover:text-rust">
-                          <Heart className="w-4 h-4 mr-1" />
-                          Like
-                        </Button>
-                        <Button variant="ghost" size="sm" className="text-forest hover:text-rust">
-                          <MessageCircle className="w-4 h-4 mr-1" />
-                          Comment
-                        </Button>
+                        <LikeButton 
+                          submissionId={post.id}
+                          initialLiked={post.isLikedByUser ?? false}
+                          initialCount={post.likesCount ?? 0}
+                        />
+                        <CommentButton 
+                          submissionId={post.id}
+                          initialCount={post.commentsCount ?? 0}
+                        />
                         <Button 
                           variant="ghost" 
                           size="sm" 
