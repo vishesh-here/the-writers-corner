@@ -44,6 +44,7 @@ export function CommunityOverview() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [topicFilter, setTopicFilter] = useState('all')
+  const [sortBy, setSortBy] = useState('newest')
   const [savingPostId, setSavingPostId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -115,6 +116,20 @@ export function CommunityOverview() {
     const matchesTopic = topicFilter === 'all' || post.exercise?.topic.slug === topicFilter
     return matchesSearch && matchesTopic
   })
+
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    if (sortBy === 'most-liked') {
+      return (b.likesCount ?? 0) - (a.likesCount ?? 0)
+    }
+
+    if (sortBy === 'most-commented') {
+      return (b.commentsCount ?? 0) - (a.commentsCount ?? 0)
+    }
+
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  })
+
+  const hasActiveFilter = Boolean(searchTerm) || topicFilter !== 'all'
 
   const getExcerpt = (content: string, maxLength: number = 200) => {
     if (content.length <= maxLength) return content
@@ -198,7 +213,7 @@ export function CommunityOverview() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-3 gap-4">
                 <div>
                   <label className="font-typewriter text-ink block mb-2">Search:</label>
                   <div className="relative">
@@ -226,13 +241,26 @@ export function CommunityOverview() {
                     </SelectContent>
                   </Select>
                 </div>
+                <div>
+                  <label className="font-typewriter text-ink block mb-2">Sort by:</label>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="font-serif border-2 border-ink focus:border-rust">
+                      <SelectValue placeholder="Sort posts" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="most-liked">Most Liked</SelectItem>
+                      <SelectItem value="most-commented">Most Commented</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
         {/* Posts */}
-        {filteredPosts.length === 0 ? (
+        {sortedPosts.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -241,10 +269,10 @@ export function CommunityOverview() {
           >
             <PenTool className="w-16 h-16 text-forest mx-auto mb-4" />
             <h3 className="text-2xl font-typewriter font-bold text-ink mb-4">
-              {searchTerm || topicFilter !== 'all' ? 'No matches found' : 'No shared work yet'}
+              {hasActiveFilter ? 'No matches found' : 'No shared work yet'}
             </h3>
             <p className="font-serif text-forest mb-6 max-w-md mx-auto">
-              {searchTerm || topicFilter !== 'all' 
+              {hasActiveFilter
                 ? 'Try adjusting your search terms or filters.'
                 : 'Be the first to share your exercise responses with the community! Complete exercises and make them public to start building our creative library.'
               }
@@ -259,7 +287,7 @@ export function CommunityOverview() {
           </motion.div>
         ) : (
           <div className="space-y-6">
-            {filteredPosts.map((post, index) => (
+            {sortedPosts.map((post, index) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 30 }}
