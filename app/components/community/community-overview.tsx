@@ -3,14 +3,17 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useSession } from 'next-auth/react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Users, PenTool, BookOpen, Heart, MessageCircle, Filter, Search, Bookmark, BookmarkCheck } from 'lucide-react'
+import { Users, PenTool, BookOpen, Heart, MessageCircle, Filter, Search, Bookmark, BookmarkCheck, Plus, Send, X } from 'lucide-react'
 import { DownloadPostButton } from '@/components/community/download-post-button'
 import { GenerateVideoButton } from '@/components/community/generate-video-button'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useToast } from '@/hooks/use-toast'
 import { LikeButton } from './like-button'
 import { CommentButton } from './comment-button'
 import Link from 'next/link'
@@ -40,15 +43,72 @@ interface CommunityPost {
 }
 
 export function CommunityOverview() {
+  const { data: session } = useSession()
+  const { toast } = useToast()
   const [posts, setPosts] = useState<CommunityPost[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [topicFilter, setTopicFilter] = useState('all')
   const [savingPostId, setSavingPostId] = useState<string | null>(null)
+  const [showCompose, setShowCompose] = useState(false)
+  const [newTitle, setNewTitle] = useState('')
+  const [newContent, setNewContent] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  const isAuthenticated = !!session?.user
 
   useEffect(() => {
     fetchCommunityPosts()
   }, [])
+
+  const handleCreatePost = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!newTitle.trim() || !newContent.trim()) {
+      toast({
+        title: 'Missing details',
+        description: 'Please add both a title and some content before sharing.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      const response = await fetch('/api/community/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newTitle.trim(), content: newContent.trim() }),
+      })
+
+      if (response.ok) {
+        toast({
+          title: 'Posted!',
+          description: 'Your writing has been shared with the community.',
+        })
+        setNewTitle('')
+        setNewContent('')
+        setShowCompose(false)
+        await fetchCommunityPosts()
+      } else {
+        const data = await response.json().catch(() => ({}))
+        toast({
+          title: 'Could not share post',
+          description: data?.error || 'Something went wrong. Please try again.',
+          variant: 'destructive',
+        })
+      }
+    } catch (error) {
+      console.error('Error creating community post:', error)
+      toast({
+        title: 'Could not share post',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const fetchCommunityPosts = async () => {
     try {
@@ -181,6 +241,96 @@ export function CommunityOverview() {
               <p className="font-serif text-forest text-sm">Topics</p>
             </div>
           </div>
+        </motion.div>
+
+        {/* Compose */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="mb-8"
+        >
+          {!showCompose ? (
+            <div className="flex justify-center">
+              {isAuthenticated ? (
+                <Button
+                  className="btn-vintage"
+                  onClick={() => setShowCompose(true)}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Share Your Writing
+                </Button>
+              ) : (
+                <Link href="/auth/signin">
+                  <Button className="btn-vintage">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Sign in to Share Your Writing
+                  </Button>
+                </Link>
+              )}
+            </div>
+          ) : (
+            <Card className="card-vintage border-2">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="font-typewriter text-ink flex items-center gap-2">
+                    <PenTool className="w-5 h-5" />
+                    Share Your Writing
+                  </CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-forest hover:text-rust"
+                    onClick={() => setShowCompose(false)}
+                    disabled={submitting}
+                    aria-label="Cancel"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleCreatePost} className="space-y-4">
+                  <div>
+                    <label className="font-typewriter text-ink block mb-2">Title:</label>
+                    <Input
+                      placeholder="Give your piece a title..."
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      maxLength={200}
+                      disabled={submitting}
+                      className="font-serif border-2 border-ink focus:border-rust"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-typewriter text-ink block mb-2">Content:</label>
+                    <Textarea
+                      placeholder="Write your story, poem, or thoughts to share with the community..."
+                      value={newContent}
+                      onChange={(e) => setNewContent(e.target.value)}
+                      disabled={submitting}
+                      className="min-h-[160px] font-serif border-2 border-ink focus:border-rust"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button type="submit" className="btn-vintage" disabled={submitting}>
+                      <Send className="w-4 h-4 mr-2" />
+                      {submitting ? 'Sharing...' : 'Share Post'}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="btn-vintage"
+                      onClick={() => setShowCompose(false)}
+                      disabled={submitting}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
         </motion.div>
 
         {/* Filters */}
