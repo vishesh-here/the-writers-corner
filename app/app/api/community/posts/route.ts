@@ -3,19 +3,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
-import { isStaticCacheEnabled, getStaticTimelinePayload } from '@/lib/feed-cache'
 import '@/lib/types'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    // Serve the precomputed static snapshot instead of querying the database
-    // when the static feed cache is enabled.
-    if (isStaticCacheEnabled()) {
-      return NextResponse.json(getStaticTimelinePayload())
-    }
-
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
