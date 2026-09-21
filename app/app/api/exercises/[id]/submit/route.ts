@@ -3,6 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
+import {
+  isDemoFailureMode,
+  DEMO_WRITE_DISABLED_BODY,
+  DEMO_WRITE_DISABLED_STATUS,
+} from '@/lib/demo-mode'
 import '@/lib/types'
 
 export const dynamic = 'force-dynamic'
@@ -12,6 +17,14 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    // DEMO_FAILURE_MODE: writes are disabled in demo mode. Return a controlled
+    // 503 instead of mutating the database. Fully reversible — unset the flag.
+    if (isDemoFailureMode()) {
+      return NextResponse.json(DEMO_WRITE_DISABLED_BODY, {
+        status: DEMO_WRITE_DISABLED_STATUS,
+      })
+    }
+
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {

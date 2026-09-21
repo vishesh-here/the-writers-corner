@@ -125,7 +125,32 @@ GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
 GITHUB_ID=""
 GITHUB_SECRET=""
+
+# Demo/staging only — reversible read-only demonstration mode (off by default)
+DEMO_FAILURE_MODE=false
 ```
+
+---
+
+## 🧪 Demo Failure Mode
+
+`DEMO_FAILURE_MODE` is a **reversible, demo/staging-only** flag that turns the
+app into a safe, read-only demonstration. It is **off by default** — normal
+behavior is fully preserved when the variable is unset or `false`.
+
+When enabled (`DEMO_FAILURE_MODE=true`):
+
+- 📰 The community timeline/feed (`GET /api/community/posts`) returns a
+  **deterministic frozen fixture** instead of querying the database.
+- 🚫 Post/submission writes (`POST /api/exercises/[id]/submit`) return
+  **HTTP 503** `{ "error": "demo_write_disabled", "message": "Write operations are disabled in demo mode." }`.
+- ⚠️ A yellow **"Demo Mode — writes are disabled"** banner appears across the app.
+
+**Enable:** set `DEMO_FAILURE_MODE=true` in `app/.env` and restart.
+**Rollback:** set it back to `false` (or remove the line) and restart — no data
+is mutated and no migrations are run.
+
+See [`docs/DEMO_MODE.md`](docs/DEMO_MODE.md) for full details.
 
 ### Build for Production
 

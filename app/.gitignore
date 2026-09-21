@@ -1,0 +1,19 @@
+# dependencies
+/node_modules
+/.yarn
+/.pnp
+.pnp.*
+
+# next.js / build output
+/.next
+/.build
+/out
+
+# env files (do not commit real secrets; use .env.example)
+.env
+.env.local
+.env.*.local
+
+# misc
+*.log
+.DS_Store

@@ -3,12 +3,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
+import { isDemoFailureMode, getDemoTimelinePayload } from '@/lib/demo-mode'
 import '@/lib/types'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
+    // DEMO_FAILURE_MODE: serve a deterministic frozen fixture instead of
+    // querying the database. Fully reversible — unset the flag to restore.
+    if (isDemoFailureMode()) {
+      return NextResponse.json(getDemoTimelinePayload())
+    }
+
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
