@@ -2,7 +2,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Providers } from '@/components/providers'
-import { DemoBanner } from '@/components/demo-banner'
 
 export const metadata: Metadata = {
   title: 'The Writer\'s Corner - Master the Art of Novel Writing',
@@ -17,7 +16,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-typewriter bg-parchment text-ink antialiased">
-        <DemoBanner />
         <Providers>
           {children}
         </Providers>
