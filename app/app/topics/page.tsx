@@ -15,7 +15,7 @@ export default async function TopicsPage() {
   return (
     <div className="min-h-screen bg-parchment">
       <Navigation />
-      <main>
+      <main id="main-content" tabIndex={-1} className="focus:outline-none">
         <TopicsOverview />
       </main>
     </div>

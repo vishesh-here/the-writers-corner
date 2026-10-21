@@ -25,7 +25,7 @@ export function HeroSection() {
           </h1>
           <p className="text-xl md:text-2xl font-serif text-forest max-w-3xl mx-auto leading-relaxed">
             Transform your ideas into compelling novels with our comprehensive guides, 
-            interactive excercises, and supportive writer community.
+            interactive exercises, and supportive writer community.
           </p>
         </motion.div>
 

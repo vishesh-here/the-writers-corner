@@ -34,10 +34,10 @@ export default function SignUpPage() {
       return
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       toast({
         title: "Password Too Short",
-        description: "Password must be at least 6 characters long.",
+        description: "Password must be at least 8 characters long.",
         variant: "destructive",
       })
       return
@@ -64,7 +64,7 @@ export default function SignUpPage() {
       if (response.ok) {
         toast({
           title: "Account Created!",
-          description: "Welcome to The Writer's Corner, ${firstName}. Signing you in...",
+          description: `Welcome to The Writer's Corner, ${firstName}. Signing you in...`,
         })
 
         // Automatically sign in the user
@@ -103,7 +103,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-parchment paper-texture flex items-center justify-center px-4 py-8">
+    <div id="main-content" className="min-h-screen bg-parchment paper-texture flex items-center justify-center px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -121,7 +121,7 @@ export default function SignUpPage() {
             </motion.div>
             <CardTitle className="text-2xl font-typewriter text-ink">Join The Writer's Corner</CardTitle>
             <CardDescription className="font-serif text-forest">
-              Start you journey to becoming a master novelist
+              Start your journey to becoming a master novelist
             </CardDescription>
           </CardHeader>
 
@@ -135,6 +135,8 @@ export default function SignUpPage() {
                   </Label>
                   <Input
                     id="firstName"
+                    name="firstName"
+                    autoComplete="given-name"
                     type="text"
                     placeholder="John"
                     value={firstName}
@@ -149,6 +151,8 @@ export default function SignUpPage() {
                   </Label>
                   <Input
                     id="lastName"
+                    name="lastName"
+                    autoComplete="family-name"
                     type="text"
                     placeholder="Doe"
                     value={lastName}
@@ -166,6 +170,8 @@ export default function SignUpPage() {
                 </Label>
                 <Input
                   id="email"
+                  name="email"
+                  autoComplete="email"
                   type="email"
                   placeholder="your@email.com"
                   value={email}
@@ -182,12 +188,14 @@ export default function SignUpPage() {
                 </Label>
                 <Input
                   id="password"
+                  name="password"
+                  autoComplete="new-password"
                   type="password"
                   placeholder="At least 8 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={6}
+                  minLength={8}
                   className="font-typewriter border-2 border-ink focus:border-rust pl-10"
                 />
               </div>
@@ -199,6 +207,8 @@ export default function SignUpPage() {
                 </Label>
                 <Input
                   id="confirmPassword"
+                  name="confirmPassword"
+                  autoComplete="new-password"
                   type="password"
                   placeholder="Repeat your password"
                   value={confirmPassword}
