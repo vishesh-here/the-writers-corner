@@ -64,7 +64,7 @@ export default function SignUpPage() {
       if (response.ok) {
         toast({
           title: "Account Created!",
-          description: "Welcome to The Writer's Corner. Signing you in...",
+          description: "Welcome to The Writer's Corner, ${firstName}. Signing you in...",
         })
 
         // Automatically sign in the user
@@ -121,7 +121,7 @@ export default function SignUpPage() {
             </motion.div>
             <CardTitle className="text-2xl font-typewriter text-ink">Join The Writer's Corner</CardTitle>
             <CardDescription className="font-serif text-forest">
-              Start your journey to becoming a master novelist
+              Start you journey to becoming a master novelist
             </CardDescription>
           </CardHeader>
 
@@ -183,7 +183,7 @@ export default function SignUpPage() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="At least 6 characters"
+                  placeholder="At least 8 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
