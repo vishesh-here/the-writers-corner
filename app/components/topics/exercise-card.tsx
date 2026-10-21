@@ -78,23 +78,31 @@ export function ExerciseCard({ exercise, exerciseNumber, topicSlug }: ExerciseCa
       isPublic: isPublic,
     }
 
-    // Reflect the saved state immediately so the editor feels responsive, then
-    // persist the response in the background.
-    setIsSubmitted(true)
-    toast({
-      title: "Exercise Completed!",
-      description: "Your response has been saved successfully.",
-    })
-
+    // Only report success once the server has confirmed the save.
     try {
-      fetch(`/api/exercises/${exercise.id}/submit`, {
+      const res = await fetch(`/api/exercises/${exercise.id}/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
-      }).catch((error) => {
-        console.error('Error saving submission:', error)
+      })
+
+      if (!res.ok) {
+        throw new Error(`Save failed with status ${res.status}`)
+      }
+
+      setIsSubmitted(true)
+      toast({
+        title: "Exercise Completed!",
+        description: "Your response has been saved successfully.",
+      })
+    } catch (error) {
+      console.error('Error saving submission:', error)
+      toast({
+        title: "Save Failed",
+        description: "Your response could not be saved. Please try again.",
+        variant: "destructive",
       })
     } finally {
       setLoading(false)
