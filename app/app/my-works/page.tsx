@@ -14,7 +14,7 @@ export default async function MyWorksPage() {
   return (
     <div className="min-h-screen bg-parchment">
       <Navigation />
-      <main>
+      <main id="main-content" tabIndex={-1} className="focus:outline-none">
         <MyWorksContent />
       </main>
     </div>

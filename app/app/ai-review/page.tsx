@@ -20,7 +20,7 @@ export default async function AIReviewPage() {
   return (
     <div className="min-h-screen bg-parchment">
       <Navigation />
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main id="main-content" tabIndex={-1} className="max-w-4xl mx-auto px-4 py-8 focus:outline-none">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 bg-rust/10 rounded-full mb-4">

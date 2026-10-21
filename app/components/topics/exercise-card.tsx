@@ -25,6 +25,11 @@ interface ExerciseCardProps {
   topicSlug: string
 }
 
+// A "word" must contain at least one letter or digit, so whitespace- or
+// punctuation-only responses count as zero words.
+const countWords = (text: string) =>
+  text.trim().split(/\s+/).filter(word => /[\p{L}\p{N}]/u.test(word)).length
+
 export function ExerciseCard({ exercise, exerciseNumber, topicSlug }: ExerciseCardProps) {
   const [expanded, setExpanded] = useState(false)
   const [response, setResponse] = useState('')
@@ -54,11 +59,13 @@ export function ExerciseCard({ exercise, exerciseNumber, topicSlug }: ExerciseCa
     }
   }
 
+  const wordCount = countWords(response)
+
   const handleSubmit = async () => {
-    if (!response.trim()) {
+    if (wordCount < 1) {
       toast({
         title: "Response Required",
-        description: "Please write your response before submitting.",
+        description: "Please write at least one word before completing this exercise.",
         variant: "destructive",
       })
       return
@@ -93,8 +100,6 @@ export function ExerciseCard({ exercise, exerciseNumber, topicSlug }: ExerciseCa
       setLoading(false)
     }
   }
-
-  const wordCount = response.trim().split(/\s+/).filter(word => word.length > 0).length
 
   return (
     <Card className="card-vintage border-4">
@@ -178,6 +183,8 @@ export function ExerciseCard({ exercise, exerciseNumber, topicSlug }: ExerciseCa
               </div>
 
               <Textarea
+                name="response"
+                aria-label="Your response"
                 value={response}
                 onChange={(e) => setResponse(e.target.value)}
                 placeholder="Write your response here... Take your time to craft a thoughtful response that demonstrates your understanding of the concepts."
@@ -188,7 +195,7 @@ export function ExerciseCard({ exercise, exerciseNumber, topicSlug }: ExerciseCa
               <div className="flex gap-3">
                 <Button
                   onClick={handleSubmit}
-                  disabled={loading || !response.trim()}
+                  disabled={loading || wordCount < 1}
                   className="btn-vintage flex items-center gap-2"
                 >
                   {loading ? (

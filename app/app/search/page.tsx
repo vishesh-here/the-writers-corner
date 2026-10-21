@@ -138,7 +138,7 @@ export default function SearchPage() {
   if (!session) return null
 
   return (
-    <div className="min-h-screen bg-parchment paper-texture py-8">
+    <div id="main-content" className="min-h-screen bg-parchment paper-texture py-8">
       <div className="max-w-4xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

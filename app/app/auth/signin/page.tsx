@@ -55,7 +55,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-parchment paper-texture flex items-center justify-center px-4 py-8">
+    <div id="main-content" className="min-h-screen bg-parchment paper-texture flex items-center justify-center px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -86,6 +86,8 @@ export default function SignInPage() {
                 </Label>
                 <Input
                   id="email"
+                  name="email"
+                  autoComplete="email"
                   type="email"
                   placeholder="your@email.com"
                   value={email}
@@ -102,6 +104,8 @@ export default function SignInPage() {
                 </Label>
                 <Input
                   id="password"
+                  name="password"
+                  autoComplete="current-password"
                   type="password"
                   placeholder="Your password"
                   value={password}

@@ -56,7 +56,7 @@ export function CTASection() {
                   </Button>
                 </Link>
                 <p className="text-sm font-serif text-forest">
-                  Free to join • No credit card requried
+                  Free to join • No credit card required
                 </p>
               </>
             )}

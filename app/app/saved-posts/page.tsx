@@ -116,7 +116,7 @@ export default function SavedPostsPage() {
   }
 
   return (
-    <section className="py-12 px-4 paper-texture min-h-screen">
+    <section id="main-content" className="py-12 px-4 paper-texture min-h-screen">
       <div className="max-w-content mx-auto">
         {/* Header */}
         <motion.div
