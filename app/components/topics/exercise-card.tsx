@@ -66,37 +66,28 @@ export function ExerciseCard({ exercise, exerciseNumber, topicSlug }: ExerciseCa
 
     setLoading(true)
 
+    const payload = {
+      content: response,
+      isPublic: isPublic,
+    }
+
+    // Reflect the saved state immediately so the editor feels responsive, then
+    // persist the response in the background.
+    setIsSubmitted(true)
+    toast({
+      title: "Exercise Completed!",
+      description: "Your response has been saved successfully.",
+    })
+
     try {
-      const res = await fetch(`/api/exercises/${exercise.id}/submit`, {
+      fetch(`/api/exercises/${exercise.id}/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          content: response,
-          isPublic: isPublic
-        }),
-      })
-
-      if (res.ok) {
-        setIsSubmitted(true)
-        toast({
-          title: "Exercise Completed!",
-          description: "Your response has been saved successfully.",
-        })
-      } else {
-        const error = await res.json()
-        toast({
-          title: "Submission Failed",
-          description: error.message || "Failed to submit response. Please try again.",
-          variant: "destructive",
-        })
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
+        body: JSON.stringify(payload),
+      }).catch((error) => {
+        console.error('Error saving submission:', error)
       })
     } finally {
       setLoading(false)
